@@ -6,10 +6,10 @@ const Nav = () => {
     <nav className='flex justify-between bg-nav p-4'>
       <div className='flex items-center space-x-4'>
         <Link href='/'>
-          <FaTicketAlt className='icon' />
+          <FaHome className='icon' />
         </Link>
         <Link href='/tickets-page/new'>
-          <FaHome className='icon' />
+          <FaTicketAlt className='icon' />
         </Link>
       </div>
       <div>
