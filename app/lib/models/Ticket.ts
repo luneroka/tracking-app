@@ -16,10 +16,11 @@ export enum TicketCategory {
 }
 
 export enum Priority {
-  LOW = 'Low',
-  MEDIUM = 'Medium',
-  HIGH = 'High',
-  URGENT = 'Urgent',
+  ONE = 1,
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
 }
 
 export class Ticket {
@@ -32,6 +33,9 @@ export class Ticket {
   @prop({ required: true, enum: TicketCategory, default: TicketCategory.BUG })
   public category!: TicketCategory;
 
+  @prop({ enum: Priority, default: Priority.THREE })
+  public priority!: Priority;
+
   @prop({ min: 0, max: 100, default: 0 })
   public progress!: number;
 
@@ -41,9 +45,6 @@ export class Ticket {
     default: TicketStatus.NOT_STARTED,
   })
   public status!: TicketStatus;
-
-  @prop({ enum: Priority, default: Priority.MEDIUM })
-  public priority!: Priority;
 
   @prop({ required: true, default: true })
   public active!: boolean;
