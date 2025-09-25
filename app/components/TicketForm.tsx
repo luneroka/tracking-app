@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface TicketData {
+  _id?: string;
   title: string;
   description: string;
   category: string;
@@ -13,8 +14,13 @@ interface TicketData {
   active: boolean;
 }
 
-const TicketForm = () => {
+interface TicketFormProps {
+  ticket: TicketData;
+}
+
+const TicketForm = ({ ticket }: TicketFormProps) => {
   const router = useRouter();
+  const EDITMODE = ticket._id === 'new' ? false : true;
 
   const startingTicketData: TicketData = {
     title: '',
@@ -25,6 +31,15 @@ const TicketForm = () => {
     status: 'Not Started',
     active: false,
   };
+
+  if (EDITMODE) {
+    startingTicketData['title'] = ticket.title;
+    startingTicketData['description'] = ticket.description;
+    startingTicketData['category'] = ticket.category;
+    startingTicketData['priority'] = ticket.priority;
+    startingTicketData['progress'] = ticket.progress;
+    startingTicketData['status'] = ticket.status;
+  }
 
   const [formData, setFormData] = useState<TicketData>(startingTicketData);
 
