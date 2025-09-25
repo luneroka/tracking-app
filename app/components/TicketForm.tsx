@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface TicketData {
@@ -13,6 +14,8 @@ interface TicketData {
 }
 
 const TicketForm = () => {
+  const router = useRouter();
+
   const startingTicketData: TicketData = {
     title: '',
     description: '',
@@ -34,12 +37,26 @@ const TicketForm = () => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:
+        name === 'priority' || name === 'progress' ? parseInt(value) : value,
     }));
   };
 
-  const handleSubmit = () => {
-    console.log('Submitted');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch('/api/tickets', {
+      method: 'POST',
+      body: JSON.stringify({ formData }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to create the ticket.');
+    }
+
+    router.push('/');
   };
 
   return (
@@ -74,10 +91,10 @@ const TicketForm = () => {
         />
 
         {/* Category */}
-        <label htmlFor=''>Category</label>
+        <label htmlFor='category'>Category</label>
         <select
           name='category'
-          id=''
+          id='category'
           value={formData.category}
           onChange={handleChange}
         >
@@ -88,7 +105,7 @@ const TicketForm = () => {
         </select>
 
         {/* Priority */}
-        <label htmlFor=''>Priority</label>
+        <label>Priority</label>
         <div>
           <input
             id='priority-1'
@@ -138,7 +155,7 @@ const TicketForm = () => {
         </div>
 
         {/* Progress */}
-        <label htmlFor=''>Progress</label>
+        <label htmlFor='progress'>Progress</label>
         <input
           type='range'
           id='progress'
@@ -150,8 +167,13 @@ const TicketForm = () => {
         />
 
         {/* Status */}
-        <label htmlFor=''>Status</label>
-        <select name='status' value={formData.status} onChange={handleChange}>
+        <label htmlFor='status'>Status</label>
+        <select
+          name='status'
+          id='status'
+          value={formData.status}
+          onChange={handleChange}
+        >
           <option value='Not Started'>Not Started</option>
           <option value='In Progress'>In Progress</option>
           <option value='Completed'>Completed</option>
